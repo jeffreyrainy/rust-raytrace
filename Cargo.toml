@@ -1,0 +1,6 @@
+[package]
+name = "rust-png"
+version = "0.1.0"
+authors = ["jeff <jeffreyrainy@gmail.com>"]
+
+[dependencies]

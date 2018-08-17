@@ -1,2 +1,2 @@
 # rust-raytrace
-Small ray-tracer project to leanrn Rust
+Small ray-tracer project to learn Rust
