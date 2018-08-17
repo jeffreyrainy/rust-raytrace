@@ -12,11 +12,24 @@ pub struct Sphere {
 
 impl Intersector for Sphere {
     fn intersect(&self, ray: &Ray) -> (f64, Vec3) {
-        (
-            ray.dir.dot(ray.origin - self.c).powf(2.0) - (ray.origin - self.c).len2()
-                + self.r * self.r,
-            self.col,
-        )
+
+        let discriminant = ray.dir.dot(ray.origin - self.c).powf(2.0) - (ray.origin - self.c).len2()
+            + self.r * self.r;
+
+        if discriminant < 0.0
+        {
+            return(-1.0, Vec3 {v:[0.0, 0.0, 0.0]});
+        }
+
+        let d1 = -ray.dir.dot(ray.origin - self.c) - discriminant.sqrt();
+        let d2 = -ray.dir.dot(ray.origin - self.c) + discriminant.sqrt();
+
+        if (d1<0.0)
+        {
+           return(-d1, self.col)
+
+        }
+        return(-d2, self.col)
     }
 }
 
