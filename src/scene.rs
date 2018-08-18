@@ -21,21 +21,27 @@ impl Intersector for Sphere {
 
         let d1 = -ray.dir.dot(ray.origin - self.c) - discriminant.sqrt();
         let d2 = -ray.dir.dot(ray.origin - self.c) + discriminant.sqrt();
+        let mut pos = Vec3::default_vec();
+        let mut dist = 0.0;
 
         if d1 > 0.0 {
-            return (d1, self.col);
+            pos = ray.origin + ray.dir * d1;
+            dist = d1;
+        } else {
+            pos = ray.origin + ray.dir * d2;
+            dist = d2;
         }
-        return (d2, self.col);
+
+        (dist, self.col)
     }
 }
 
 pub struct Scene {
-    objects: Vec <Box<dyn Intersector>>,
+    objects: Vec<Box<dyn Intersector>>,
 }
 
 impl Scene {
-    pub fn add(&mut self, object: Box<dyn Intersector>)
-    {
+    pub fn add(&mut self, object: Box<dyn Intersector>) {
         self.objects.push(object);
     }
     pub fn intersect(&self, ray: &Ray) -> Vec3 {
@@ -60,8 +66,6 @@ impl Scene {
     }
 
     pub fn default_scene() -> Scene {
-        Scene {
-            objects: vec![],
-        }
+        Scene { objects: vec![] }
     }
 }

@@ -51,18 +51,16 @@ fn main() {
     {
         let mut scene = Scene::default_scene();
 
-        scene.add(
-                Box::new(Sphere {
-                    c: Vec3 { v: [0., 0., -1.] },
-                    r: 0.3,
-                    col: Vec3 { v: [0.8, 0.7, 0.1] },
-                }));
-        scene.add(
-                Box::new(Sphere {
-                    c: Vec3 { v: [0., 0.4, -1.] },
-                    r: 0.3,
-                    col: Vec3 { v: [0.5, 0.6, 0.9] },
-                }));
+        scene.add(Box::new(Sphere {
+            c: Vec3 { v: [0., 0., -1.] },
+            r: 0.3,
+            col: Vec3 { v: [0.8, 0.7, 0.1] },
+        }));
+        scene.add(Box::new(Sphere {
+            c: Vec3 { v: [0., 0.4, -1.] },
+            r: 0.3,
+            col: Vec3 { v: [0.5, 0.6, 0.9] },
+        }));
 
         render(&mut image, image_width, image_height, &scene);
     }
