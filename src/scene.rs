@@ -24,12 +24,12 @@ impl Intersector for Sphere {
         let d1 = -ray.dir.dot(ray.origin - self.c) - discriminant.sqrt();
         let d2 = -ray.dir.dot(ray.origin - self.c) + discriminant.sqrt();
 
-        if (d1<0.0)
+        if (d1>0.0)
         {
-           return(-d1, self.col)
+           return(d1, self.col)
 
         }
-        return(-d2, self.col)
+        return(d2, self.col)
     }
 }
 
