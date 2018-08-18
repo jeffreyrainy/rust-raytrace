@@ -25,7 +25,7 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
             for i in 0..offset_x.len() {
                 r.dir.v[0] = ((x as f64 + offset_x[i]) / size_x as f64 - 0.5) * view_x;
                 r.dir.v[1] = ((y as f64 + offset_y[i]) / size_y as f64 - 0.5) * view_y;
-                r.dir.v[2] = 1.0;
+                r.dir.v[2] = -1.0;
 
                 r.normalize();
 
