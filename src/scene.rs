@@ -1,6 +1,6 @@
 use vector::{Ray, Vec3};
 
-trait Intersector {
+pub trait Intersector {
     fn intersect(&self, ray: &Ray) -> (f64, Vec3);
 }
 
@@ -12,45 +12,45 @@ pub struct Sphere {
 
 impl Intersector for Sphere {
     fn intersect(&self, ray: &Ray) -> (f64, Vec3) {
-
         let discriminant = ray.dir.dot(ray.origin - self.c).powf(2.0) - (ray.origin - self.c).len2()
             + self.r * self.r;
 
-        if discriminant < 0.0
-        {
-            return(-1.0, Vec3 {v:[0.0, 0.0, 0.0]});
+        if discriminant < 0.0 {
+            return (-1.0, Vec3 { v: [0.0, 0.0, 0.0] });
         }
 
         let d1 = -ray.dir.dot(ray.origin - self.c) - discriminant.sqrt();
         let d2 = -ray.dir.dot(ray.origin - self.c) + discriminant.sqrt();
 
-        if (d1>0.0)
-        {
-           return(d1, self.col)
-
+        if d1 > 0.0 {
+            return (d1, self.col);
         }
-        return(d2, self.col)
+        return (d2, self.col);
     }
 }
 
 pub struct Scene {
-    objects: Vec<Box<dyn Intersector>>,
+    objects: Vec <Box<dyn Intersector>>,
 }
 
 impl Scene {
+    pub fn add(&mut self, object: Box<dyn Intersector>)
+    {
+        self.objects.push(object);
+    }
     pub fn intersect(&self, ray: &Ray) -> Vec3 {
         let mut ret = Vec3 { v: [0., 0., 0.] };
 
-        let mut bestValid = false;
-        let mut bestDist = 0.0;
+        let mut best_valid = false;
+        let mut best_dist = 0.0;
 
         for object in &self.objects {
             let det = object.intersect(&ray);
 
             if det.0 >= 0.0 {
-                if (!bestValid || det.0 < bestDist) {
-                    bestValid = true;
-                    bestDist = det.0;
+                if !best_valid || det.0 < best_dist {
+                    best_valid = true;
+                    best_dist = det.0;
                     ret = det.1;
                 }
             }
@@ -61,18 +61,7 @@ impl Scene {
 
     pub fn default_scene() -> Scene {
         Scene {
-            objects: vec![
-                Box::new(Sphere {
-                    c: Vec3 { v: [0., 0., -1.] },
-                    r: 0.3,
-                    col: Vec3 { v: [0.8, 0.7, 0.1] },
-                }),
-                Box::new(Sphere {
-                    c: Vec3 { v: [0., 0.4, -1.] },
-                    r: 0.3,
-                    col: Vec3 { v: [0.5, 0.6, 0.9] },
-                }),
-            ],
+            objects: vec![],
         }
     }
 }

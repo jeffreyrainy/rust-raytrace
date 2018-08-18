@@ -2,7 +2,7 @@ mod write;
 use write::write_png;
 
 mod scene;
-use scene::Scene;
+use scene::{Scene, Sphere};
 
 mod vector;
 use vector::{Ray, Vec3};
@@ -49,7 +49,20 @@ fn main() {
     let mut image = vec![255; (image_width * image_height * 4) as usize];
 
     {
-        let scene = Scene::default_scene();
+        let mut scene = Scene::default_scene();
+
+        scene.add(
+                Box::new(Sphere {
+                    c: Vec3 { v: [0., 0., -1.] },
+                    r: 0.3,
+                    col: Vec3 { v: [0.8, 0.7, 0.1] },
+                }));
+        scene.add(
+                Box::new(Sphere {
+                    c: Vec3 { v: [0., 0.4, -1.] },
+                    r: 0.3,
+                    col: Vec3 { v: [0.5, 0.6, 0.9] },
+                }));
 
         render(&mut image, image_width, image_height, &scene);
     }
