@@ -1,4 +1,5 @@
 use vector::{Ray, Vec3};
+use std::num;
 
 pub trait Intersector {
     fn intersect(&self, ray: &Ray) -> (f64, Vec3);
@@ -25,14 +26,20 @@ impl Intersector for Sphere {
         let mut dist = 0.0;
 
         if d1 > 0.0 {
-            pos = ray.origin + ray.dir * d1;
             dist = d1;
         } else {
-            pos = ray.origin + ray.dir * d2;
             dist = d2;
         }
+        pos = ray.origin + ray.dir * dist;
 
-        (dist, self.col)
+        let light_dir = Vec3 {v:[0.0,0.1,0.9]};
+        let mut normal = (pos - self.c);
+        normal.normalize();
+
+        let mut light = normal.dot(light_dir);
+        if light < 0.0 { light = 0.0;}
+
+        (dist, self.col * light)
     }
 }
 
