@@ -1,8 +1,7 @@
 use vector::{Ray, Vec3};
-use std::num;
 
 pub trait Intersector {
-    fn intersect(&self, ray: &Ray) -> (f64, Vec3);
+    fn intersect(&self, ray: &Ray, scene: &Scene) -> (f64, Vec3);
 }
 
 pub struct Sphere {
@@ -12,7 +11,7 @@ pub struct Sphere {
 }
 
 impl Intersector for Sphere {
-    fn intersect(&self, ray: &Ray) -> (f64, Vec3) {
+    fn intersect(&self, ray: &Ray, scene: &Scene) -> (f64, Vec3) {
         let discriminant = ray.dir.dot(ray.origin - self.c).powf(2.0) - (ray.origin - self.c).len2()
             + self.r * self.r;
 
@@ -22,24 +21,27 @@ impl Intersector for Sphere {
 
         let d1 = -ray.dir.dot(ray.origin - self.c) - discriminant.sqrt();
         let d2 = -ray.dir.dot(ray.origin - self.c) + discriminant.sqrt();
-        let mut pos = Vec3::default_vec();
-        let mut dist = 0.0;
+        let pos;
+        let dist;
 
         if d1 > 0.0 {
             dist = d1;
         } else {
             dist = d2;
         }
-        pos = ray.origin + ray.dir * dist;
 
-        let light_dir = Vec3 {v:[0.0,0.1,0.9]};
-        let mut normal = (pos - self.c);
-        normal.normalize();
+        if dist > 0.0 {
+            pos = ray.origin + ray.dir * dist;
+            let mut normal = pos - self.c;
+            normal.normalize();
 
-        let mut light = normal.dot(light_dir);
-        if light < 0.0 { light = 0.0;}
+            let stat = scene.get_static_light(pos, normal, ray.dir, self.col);
+            scene.get_dynamic_light(pos, normal, ray.dir);
 
-        (dist, self.col * light)
+            return (dist, stat);
+        }
+
+        (-1.0, Vec3::default_vec())
     }
 }
 
@@ -58,7 +60,7 @@ impl Scene {
         let mut best_dist = 0.0;
 
         for object in &self.objects {
-            let det = object.intersect(&ray);
+            let det = object.intersect(&ray, self);
 
             if det.0 >= 0.0 {
                 if !best_valid || det.0 < best_dist {
@@ -71,6 +73,38 @@ impl Scene {
 
         ret
     }
+
+    pub fn get_static_light(&self, _pos: Vec3, normal: Vec3, ray_dir: Vec3, color: Vec3) -> Vec3 {
+        let light_dir = Vec3 {
+            v: [0.42, 0.6, 0.64],
+        };
+
+        let mut diffuse = normal.dot(light_dir);
+        if diffuse < 0.0 {
+            diffuse = 0.0;
+        }
+
+        let mut reflected = ray_dir - (normal * ray_dir.dot(normal)) * 2.0;
+        reflected.normalize();
+
+        let mut specular = light_dir.dot(reflected);
+
+        if specular > 0.0 {
+            specular = specular.powf(50.0);
+        } else {
+            specular = 0.0;
+        }
+
+        let mut total = diffuse + specular;
+
+        if total > 1.0 {
+            total = 1.0;
+        }
+
+        color * total
+    }
+
+    pub fn get_dynamic_light(&self, _pos: Vec3, _normal: Vec3, _dir: Vec3) {}
 
     pub fn default_scene() -> Scene {
         Scene { objects: vec![] }

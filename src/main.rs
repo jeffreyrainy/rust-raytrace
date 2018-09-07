@@ -52,14 +52,20 @@ fn main() {
         let mut scene = Scene::default_scene();
 
         scene.add(Box::new(Sphere {
-            c: Vec3 { v: [0.3, 0.0, -1.5] },
+            c: Vec3 {
+                v: [0.3, 0.0, -1.5],
+            },
             r: 0.3,
             col: Vec3 { v: [0.8, 0.7, 0.0] },
         }));
         scene.add(Box::new(Sphere {
-            c: Vec3 { v: [-0.2, 0.4, -2.0] },
+            c: Vec3 {
+                v: [-0.2, 0.4, -2.0],
+            },
             r: 0.3,
-            col: Vec3 { v: [0.5, 0.6, 0.40] },
+            col: Vec3 {
+                v: [0.5, 0.6, 0.40],
+            },
         }));
 
         render(&mut image, image_width, image_height, &scene);
