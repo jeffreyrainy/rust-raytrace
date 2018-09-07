@@ -2,10 +2,13 @@ mod write;
 use write::write_png;
 
 mod scene;
-use scene::{Scene, Sphere};
+use scene::Scene;
 
 mod vector;
 use vector::{Ray, Vec3};
+
+mod sphere;
+use sphere::Sphere;
 
 use std::f64;
 
