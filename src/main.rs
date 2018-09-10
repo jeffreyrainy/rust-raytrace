@@ -13,7 +13,7 @@ use sphere::Sphere;
 mod plane;
 use plane::Plane;
 
-use std::f64;
+use std::{f64,ptr};
 
 fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
     image[0] = 0;
@@ -35,7 +35,7 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
 
                 r.normalize();
 
-                color = color + scene.intersect(&r, true).1;
+                color = color + scene.intersect(&r, true, ptr::null()).1;
             }
             color = color / 9.0;
             image[((y * size_x + x) * 4 + 0) as usize] = (color.v[0] * 255.0) as u8;

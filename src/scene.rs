@@ -1,8 +1,10 @@
 use vector::{Ray, Vec3};
+use std::ptr;
+
 
 pub trait Intersector {
     //returns the distance and the color component
-    fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3);
+    fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3, );
 }
 
 pub struct Scene {
@@ -14,20 +16,25 @@ impl Scene {
         self.objects.push(object);
     }
     //returns the distance and the color component
-    pub fn intersect(&self, ray: &Ray, full_tracing: bool) -> (f64, Vec3) {
-        let mut ret = (-1.0, Vec3 {v: [0., 0., 0.] });
+    pub fn intersect(&self, ray: &Ray, full_tracing: bool, except: *const Box<dyn Intersector>) -> (f64, Vec3, * const Box<dyn Intersector>) {
+        let mut ret = (-1.0, Vec3 {v: [0., 0., 0.]}, ptr::null());
 
         let mut best_valid = false;
         let mut best_dist = 0.0;
 
         for object in &self.objects {
-            let dist = object.intersect(&ray, self, full_tracing);
+//todo            if object != except
+            {
+                let dist = object.intersect(&ray, self, full_tracing);
 
-            if dist.0 > 0.0 {
-                if !best_valid || dist.0 < best_dist {
-                    best_valid = true;
-                    best_dist = dist.0;
-                    ret = dist;
+                if dist.0 > 0.0 {
+                    if !best_valid || dist.0 < best_dist {
+                        best_valid = true;
+                        best_dist = dist.0;
+                        ret.0 = dist.0;
+                        ret.1 = dist.1;
+                        ret.2 = object;
+                    }
                 }
             }
         }
@@ -35,7 +42,7 @@ impl Scene {
         ret
     }
 
-    pub fn get_static_light(&self, pos: Vec3, normal: Vec3, ray_dir: Vec3, color: Vec3) -> Vec3 {
+    pub fn get_static_light(&self, pos: Vec3, normal: Vec3, ray_dir: Vec3, color: Vec3, source: *const Box<dyn Intersector>) -> Vec3 {
         let light_pos = Vec3 { v: [4.2, 6.0, 6.4] };
 
         let mut light_dir = light_pos - pos;
@@ -60,7 +67,7 @@ impl Scene {
         let mut total = diffuse + specular;
 
         let ray = Ray{origin:pos, dir:light_dir};
-        let light_intersect = self.intersect(&ray, false);
+        let light_intersect = self.intersect(&ray, false, source);
 
         if light_intersect.0 > 0.0001 //todo:fixme
         {

@@ -1,6 +1,7 @@
 use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
+use std::ptr;
 
 pub struct Sphere {
     pub c: Vec3,
@@ -36,7 +37,8 @@ impl Intersector for Sphere {
                 let mut normal = pos - self.c;
                 normal.normalize();
 
-                stat = scene.get_static_light(pos, normal, ray.dir, self.col);
+                stat = scene.get_static_light(pos, normal, ray.dir, self.col, ptr::null());
+//todo                stat = scene.get_static_light(pos, normal, ray.dir, self.col, self);
                 scene.get_dynamic_light(pos, normal, ray.dir);
             }
             return (dist, stat);

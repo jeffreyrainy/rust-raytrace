@@ -1,6 +1,7 @@
 use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
+use std::ptr;
 
 pub struct Plane {
     pub pos: Vec3,
@@ -22,7 +23,8 @@ impl Intersector for Plane {
             {
                 let pos = ray.origin + ray.dir * distance;
 
-                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col);
+                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, ptr::null());
+//todo                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self);
                 scene.get_dynamic_light(pos, self.norm, ray.dir);
             }
 
