@@ -2,7 +2,7 @@ use vector::{Ray, Vec3};
 
 pub trait Intersector {
     //returns the distance and the color component
-    fn intersect(&self, ray: &Ray, scene: &Scene) -> (f64, Vec3);
+    fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3);
 }
 
 pub struct Scene {
@@ -13,20 +13,21 @@ impl Scene {
     pub fn add(&mut self, object: Box<dyn Intersector>) {
         self.objects.push(object);
     }
-    pub fn intersect(&self, ray: &Ray) -> Vec3 {
-        let mut ret = Vec3 { v: [0., 0., 0.] };
+    //returns the distance and the color component
+    pub fn intersect(&self, ray: &Ray, full_tracing: bool) -> (f64, Vec3) {
+        let mut ret = (-1.0, Vec3 {v: [0., 0., 0.] });
 
         let mut best_valid = false;
         let mut best_dist = 0.0;
 
         for object in &self.objects {
-            let det = object.intersect(&ray, self);
+            let dist = object.intersect(&ray, self, full_tracing);
 
-            if det.0 >= 0.0 {
-                if !best_valid || det.0 < best_dist {
+            if dist.0 > 0.0 {
+                if !best_valid || dist.0 < best_dist {
                     best_valid = true;
-                    best_dist = det.0;
-                    ret = det.1;
+                    best_dist = dist.0;
+                    ret = dist;
                 }
             }
         }
@@ -58,9 +59,13 @@ impl Scene {
 
         let mut total = diffuse + specular;
 
-        // Todo: next steps, shadows
-        //        let ray = Ray{origin:pos, dir:light_dir};
-        //        self.intersect(&ray);
+        let ray = Ray{origin:pos, dir:light_dir};
+        let light_intersect = self.intersect(&ray, false);
+
+        if light_intersect.0 > 0.0001 //todo:fixme
+        {
+            total = 0.0;
+        }       
 
         if total > 1.0 {
             total = 1.0;

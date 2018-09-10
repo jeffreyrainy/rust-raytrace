@@ -35,7 +35,7 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
 
                 r.normalize();
 
-                color = color + scene.intersect(&r);
+                color = color + scene.intersect(&r, true).1;
             }
             color = color / 9.0;
             image[((y * size_x + x) * 4 + 0) as usize] = (color.v[0] * 255.0) as u8;

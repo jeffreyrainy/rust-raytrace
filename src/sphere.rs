@@ -9,7 +9,7 @@ pub struct Sphere {
 }
 
 impl Intersector for Sphere {
-    fn intersect(&self, ray: &Ray, scene: &Scene) -> (f64, Vec3) {
+    fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3) {
         let discriminant = ray.dir.dot(ray.origin - self.c).powf(2.0) - (ray.origin - self.c).len2()
             + self.r * self.r;
 
@@ -29,13 +29,16 @@ impl Intersector for Sphere {
         }
 
         if dist > 0.0 {
-            pos = ray.origin + ray.dir * dist;
-            let mut normal = pos - self.c;
-            normal.normalize();
+            let mut stat = Vec3::default_vec();
+            if full_tracing
+            {
+                pos = ray.origin + ray.dir * dist;
+                let mut normal = pos - self.c;
+                normal.normalize();
 
-            let stat = scene.get_static_light(pos, normal, ray.dir, self.col);
-            scene.get_dynamic_light(pos, normal, ray.dir);
-
+                stat = scene.get_static_light(pos, normal, ray.dir, self.col);
+                scene.get_dynamic_light(pos, normal, ray.dir);
+            }
             return (dist, stat);
         }
 
