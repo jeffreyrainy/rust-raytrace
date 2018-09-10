@@ -10,6 +10,9 @@ use vector::{Ray, Vec3};
 mod sphere;
 use sphere::Sphere;
 
+mod plane;
+use plane::Plane;
+
 use std::f64;
 
 fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
@@ -69,6 +72,13 @@ fn main() {
             col: Vec3 {
                 v: [0.5, 0.6, 0.40],
             },
+        }));
+        scene.add(Box::new(Plane {
+            pos: Vec3 {
+                v: [0.0, -0.35, 0.0],
+            },
+            norm: Vec3 { v: [0.0, 1.0, 0.0] },
+            col: Vec3 { v: [0.8, 0.8, 0.8] },
         }));
 
         render(&mut image, image_width, image_height, &scene);

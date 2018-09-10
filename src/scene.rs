@@ -1,6 +1,7 @@
 use vector::{Ray, Vec3};
 
 pub trait Intersector {
+    //returns the distance and the color component
     fn intersect(&self, ray: &Ray, scene: &Scene) -> (f64, Vec3);
 }
 
@@ -33,10 +34,11 @@ impl Scene {
         ret
     }
 
-    pub fn get_static_light(&self, _pos: Vec3, normal: Vec3, ray_dir: Vec3, color: Vec3) -> Vec3 {
-        let light_dir = Vec3 {
-            v: [0.42, 0.6, 0.64],
-        };
+    pub fn get_static_light(&self, pos: Vec3, normal: Vec3, ray_dir: Vec3, color: Vec3) -> Vec3 {
+        let light_pos = Vec3 { v: [4.2, 6.0, 6.4] };
+
+        let mut light_dir = light_pos - pos;
+        light_dir.normalize();
 
         let mut diffuse = normal.dot(light_dir);
         if diffuse < 0.0 {
@@ -55,6 +57,10 @@ impl Scene {
         }
 
         let mut total = diffuse + specular;
+
+        // Todo: next steps, shadows
+        //        let ray = Ray{origin:pos, dir:light_dir};
+        //        self.intersect(&ray);
 
         if total > 1.0 {
             total = 1.0;
