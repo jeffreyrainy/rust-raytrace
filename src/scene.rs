@@ -103,7 +103,7 @@ impl Scene {
         pos: Vec3,
         normal: Vec3,
         ray_dir: Vec3,
-        color: Vec3,
+        _color: Vec3,
         source: i64,
     ) -> Vec3 {
         let mut reflected = ray_dir - (normal * ray_dir.dot(normal)) * 2.0;
