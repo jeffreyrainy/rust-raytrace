@@ -1,12 +1,12 @@
 use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
-use std::ptr;
 
 pub struct Sphere {
     pub c: Vec3,
     pub r: f64,
     pub col: Vec3,
+    pub id: i64,
 }
 
 impl Intersector for Sphere {
@@ -31,19 +31,25 @@ impl Intersector for Sphere {
 
         if dist > 0.0 {
             let mut stat = Vec3::default_vec();
-            if full_tracing
-            {
+            if full_tracing {
                 pos = ray.origin + ray.dir * dist;
                 let mut normal = pos - self.c;
                 normal.normalize();
 
-                stat = scene.get_static_light(pos, normal, ray.dir, self.col, ptr::null());
-//todo                stat = scene.get_static_light(pos, normal, ray.dir, self.col, self);
+                stat = scene.get_static_light(pos, normal, ray.dir, self.col, self.id());
                 scene.get_dynamic_light(pos, normal, ray.dir);
             }
             return (dist, stat);
         }
 
         (-1.0, Vec3::default_vec())
+    }
+
+    fn id(&self) -> i64 {
+        self.id
+    }
+
+    fn set_id(&mut self, id: i64) {
+        self.id = id
     }
 }

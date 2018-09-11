@@ -1,12 +1,12 @@
 use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
-use std::ptr;
 
 pub struct Plane {
     pub pos: Vec3,
     pub norm: Vec3,
     pub col: Vec3,
+    pub id: i64,
 }
 
 impl Intersector for Plane {
@@ -19,16 +19,22 @@ impl Intersector for Plane {
             let distance = (self.pos - ray.origin).dot(self.norm) / ray.dir.dot(self.norm);
             let mut stat = Vec3::default_vec();
 
-            if full_tracing
-            {
+            if full_tracing {
                 let pos = ray.origin + ray.dir * distance;
 
-                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, ptr::null());
-//todo                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self);
+                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self.id());
                 scene.get_dynamic_light(pos, self.norm, ray.dir);
             }
 
             return (distance, stat);
         }
+    }
+
+    fn id(&self) -> i64 {
+        self.id
+    }
+
+    fn set_id(&mut self, id: i64) {
+        self.id = id
     }
 }
