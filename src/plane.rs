@@ -23,7 +23,7 @@ impl Intersector for Plane {
                 let pos = ray.origin + ray.dir * distance;
 
                 stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self.id());
-                scene.get_dynamic_light(pos, self.norm, ray.dir);
+                scene.get_dynamic_light(pos, self.norm, ray.dir, self.col, self.id());
             }
 
             return (distance, stat);
