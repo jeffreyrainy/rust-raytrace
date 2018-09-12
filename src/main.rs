@@ -38,6 +38,12 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
                 color = color + scene.intersect(&r, true, 0).1;
             }
             color = color / 9.0;
+
+            for z in 0..3
+            {
+                if color.v[z] > 1.0 { color.v[z] = 1.0; }
+            }
+
             image[((y * size_x + x) * 4 + 0) as usize] = (color.v[0] * 255.0) as u8;
             image[((y * size_x + x) * 4 + 1) as usize] = (color.v[1] * 255.0) as u8;
             image[((y * size_x + x) * 4 + 2) as usize] = (color.v[2] * 255.0) as u8;

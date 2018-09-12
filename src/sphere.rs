@@ -31,15 +31,17 @@ impl Intersector for Sphere {
 
         if dist > 0.0 {
             let mut stat = Vec3::default_vec();
+            let mut dyn = Vec3::default_vec();
+
             if full_tracing {
                 pos = ray.origin + ray.dir * dist;
                 let mut normal = pos - self.c;
                 normal.normalize();
 
                 stat = scene.get_static_light(pos, normal, ray.dir, self.col, self.id());
-                scene.get_dynamic_light(pos, normal, ray.dir);
+                dyn = scene.get_dynamic_light(pos, normal, ray.dir, self.col, self.id()) * 0.1; //todo: this is hardcoded specular reflectivity
             }
-            return (dist, stat);
+            return (dist, stat + dyn);
         }
 
         (-1.0, Vec3::default_vec())

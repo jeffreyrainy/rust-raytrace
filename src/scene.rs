@@ -87,19 +87,33 @@ impl Scene {
         };
         let light_intersect = self.intersect(&ray, false, source);
 
-        if light_intersect.0 > 0.0
-        {
+        //todo: this is incorrect. if there's an object further away from the light, it should not cast shadow
+        if light_intersect.0 > 0.0 {
             total = 0.0;
-        }
-
-        if total > 1.0 {
-            total = 1.0;
         }
 
         color * total
     }
 
-    pub fn get_dynamic_light(&self, _pos: Vec3, _normal: Vec3, _dir: Vec3) {}
+    pub fn get_dynamic_light(
+        &self,
+        pos: Vec3,
+        normal: Vec3,
+        ray_dir: Vec3,
+        _color: Vec3,
+        source: i64,
+    ) -> Vec3 {
+        let mut reflected = ray_dir - (normal * ray_dir.dot(normal)) * 2.0;
+        reflected.normalize();
+
+        let ray = Ray {
+            origin: pos,
+            dir: reflected,
+        };
+        let reflect_intersect = self.intersect(&ray, true, source);
+
+        return reflect_intersect.1;
+    }
 
     pub fn default_scene() -> Scene {
         Scene {

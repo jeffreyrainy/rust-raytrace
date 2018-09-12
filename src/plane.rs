@@ -18,15 +18,16 @@ impl Intersector for Plane {
         } else {
             let distance = (self.pos - ray.origin).dot(self.norm) / ray.dir.dot(self.norm);
             let mut stat = Vec3::default_vec();
+            let mut dyn = Vec3::default_vec();
 
             if full_tracing {
                 let pos = ray.origin + ray.dir * distance;
 
                 stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self.id());
-                scene.get_dynamic_light(pos, self.norm, ray.dir);
+                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.col, self.id()) * 0.7; //todo: this is hardcoded specular reflectivity
             }
 
-            return (distance, stat);
+            return (distance, stat + dyn);
         }
     }
 
