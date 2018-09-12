@@ -24,7 +24,7 @@ impl Intersector for Plane {
                 let pos = ray.origin + ray.dir * distance;
 
                 stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self.id());
-                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.col, self.id());
+                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.col, self.id()) * 0.7; //todo: this is hardcoded specular reflectivity
             }
 
             return (distance, stat + dyn);

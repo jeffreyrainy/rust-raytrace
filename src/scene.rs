@@ -87,12 +87,9 @@ impl Scene {
         };
         let light_intersect = self.intersect(&ray, false, source);
 
+        //todo: this is incorrect. if there's an object further away from the light, it should not cast shadow
         if light_intersect.0 > 0.0 {
             total = 0.0;
-        }
-
-        if total > 1.0 {
-            total = 1.0;
         }
 
         color * total

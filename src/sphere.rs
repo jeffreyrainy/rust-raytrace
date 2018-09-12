@@ -39,7 +39,7 @@ impl Intersector for Sphere {
                 normal.normalize();
 
                 stat = scene.get_static_light(pos, normal, ray.dir, self.col, self.id());
-                dyn = scene.get_dynamic_light(pos, normal, ray.dir, self.col, self.id());
+                dyn = scene.get_dynamic_light(pos, normal, ray.dir, self.col, self.id()) * 0.1; //todo: this is hardcoded specular reflectivity
             }
             return (dist, stat + dyn);
         }
