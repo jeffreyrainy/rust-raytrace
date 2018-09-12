@@ -42,9 +42,10 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
             }
             color = color / 9.0;
 
-            for z in 0..3
-            {
-                if color.v[z] > 1.0 { color.v[z] = 1.0; }
+            for z in 0..3 {
+                if color.v[z] > 1.0 {
+                    color.v[z] = 1.0;
+                }
             }
 
             image[((y * size_x + x) * 4 + 0) as usize] = (color.v[0] * 255.0) as u8;
@@ -79,7 +80,12 @@ fn main() {
                 v: [-0.2, 0.4, -2.0],
             },
             r: 0.3,
-            mat: Material::default_material(),
+            mat: Material {
+                col: Vec3 { v: [0.0, 0.0, 0.0] },
+                specular: 0.0,
+                diffuse: 0.0,
+                refractive: 1.0,
+            },
             id: 0,
         }));
         scene.add(Box::new(Plane {
@@ -87,7 +93,12 @@ fn main() {
                 v: [0.0, -0.35, 0.0],
             },
             norm: Vec3 { v: [0.0, 1.0, 0.0] },
-            mat: Material::default_material(),
+            mat: Material {
+                col: Vec3 { v: [0.7, 0.8, 0.4] },
+                specular: 0.4,
+                diffuse: 0.6,
+                refractive: 0.0,
+            },
             id: 0,
         }));
 

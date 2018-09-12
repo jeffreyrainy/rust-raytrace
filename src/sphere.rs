@@ -1,5 +1,5 @@
-use vector::{Ray, Vec3};
 use material::Material;
+use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
 
@@ -12,8 +12,8 @@ pub struct Sphere {
 
 impl Intersector for Sphere {
     fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3) {
-        let discriminant = ray.dir.dot(ray.origin - self.center).powf(2.0) - (ray.origin - self.center).len2()
-            + self.r * self.r;
+        let discriminant = ray.dir.dot(ray.origin - self.center).powf(2.0)
+            - (ray.origin - self.center).len2() + self.r * self.r;
 
         if discriminant < 0.0 {
             return (-1.0, Vec3 { v: [0.0, 0.0, 0.0] });

@@ -1,5 +1,5 @@
-use vector::{Ray, Vec3};
 use material::Material;
+use vector::{Ray, Vec3};
 
 use scene::{Intersector, Scene};
 

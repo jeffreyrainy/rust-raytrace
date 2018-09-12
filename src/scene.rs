@@ -1,6 +1,6 @@
+use material::Material;
 use std::ptr;
 use vector::{Ray, Vec3};
-use material::Material;
 
 pub trait Intersector {
     //returns the distance and the color component
@@ -113,7 +113,13 @@ impl Scene {
         };
         let reflect_intersect = self.intersect(&ray, true, source).1 * mat.specular;
 
-        return reflect_intersect;
+        let ray2 = Ray {
+            origin: pos,
+            dir: reflected * -1.0, //todo: this is wrong. fix me !
+        };
+        let refracted_intersect = self.intersect(&ray2, true, source).1 * mat.refractive;
+
+        return reflect_intersect + refracted_intersect;
     }
 
     pub fn default_scene() -> Scene {
