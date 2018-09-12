@@ -1,11 +1,12 @@
 use vector::{Ray, Vec3};
+use material::Material;
 
 use scene::{Intersector, Scene};
 
 pub struct Plane {
     pub pos: Vec3,
     pub norm: Vec3,
-    pub col: Vec3,
+    pub mat: Material,
     pub id: i64,
 }
 
@@ -23,8 +24,8 @@ impl Intersector for Plane {
             if full_tracing {
                 let pos = ray.origin + ray.dir * distance;
 
-                stat = scene.get_static_light(pos, self.norm, ray.dir, self.col, self.id());
-                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.col, self.id()) * 0.7; //todo: this is hardcoded specular reflectivity
+                stat = scene.get_static_light(pos, self.norm, ray.dir, self.mat, self.id());
+                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.mat, self.id());
             }
 
             return (distance, stat + dyn);

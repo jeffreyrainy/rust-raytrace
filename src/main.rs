@@ -13,6 +13,9 @@ use sphere::Sphere;
 mod plane;
 use plane::Plane;
 
+mod material;
+use material::Material;
+
 use std::f64;
 
 fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
@@ -64,21 +67,19 @@ fn main() {
         let mut scene = Scene::default_scene();
 
         scene.add(Box::new(Sphere {
-            c: Vec3 {
+            center: Vec3 {
                 v: [0.3, 0.0, -1.5],
             },
             r: 0.3,
-            col: Vec3 { v: [0.8, 0.7, 0.0] },
+            mat: Material::default_material(),
             id: 0,
         }));
         scene.add(Box::new(Sphere {
-            c: Vec3 {
+            center: Vec3 {
                 v: [-0.2, 0.4, -2.0],
             },
             r: 0.3,
-            col: Vec3 {
-                v: [0.5, 0.6, 0.40],
-            },
+            mat: Material::default_material(),
             id: 0,
         }));
         scene.add(Box::new(Plane {
@@ -86,7 +87,7 @@ fn main() {
                 v: [0.0, -0.35, 0.0],
             },
             norm: Vec3 { v: [0.0, 1.0, 0.0] },
-            col: Vec3 { v: [0.8, 0.8, 0.8] },
+            mat: Material::default_material(),
             id: 0,
         }));
 

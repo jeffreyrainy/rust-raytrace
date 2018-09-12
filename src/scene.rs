@@ -1,5 +1,6 @@
 use std::ptr;
 use vector::{Ray, Vec3};
+use material::Material;
 
 pub trait Intersector {
     //returns the distance and the color component
@@ -55,7 +56,7 @@ impl Scene {
         pos: Vec3,
         normal: Vec3,
         ray_dir: Vec3,
-        color: Vec3,
+        mat: Material,
         source: i64,
     ) -> Vec3 {
         let light_pos = Vec3 { v: [4.2, 6.0, 6.4] };
@@ -92,7 +93,7 @@ impl Scene {
             total = 0.0;
         }
 
-        color * total
+        mat.col * total
     }
 
     pub fn get_dynamic_light(
@@ -100,7 +101,7 @@ impl Scene {
         pos: Vec3,
         normal: Vec3,
         ray_dir: Vec3,
-        _color: Vec3,
+        mat: Material,
         source: i64,
     ) -> Vec3 {
         let mut reflected = ray_dir - (normal * ray_dir.dot(normal)) * 2.0;
@@ -110,9 +111,9 @@ impl Scene {
             origin: pos,
             dir: reflected,
         };
-        let reflect_intersect = self.intersect(&ray, true, source);
+        let reflect_intersect = self.intersect(&ray, true, source).1 * mat.specular;
 
-        return reflect_intersect.1;
+        return reflect_intersect;
     }
 
     pub fn default_scene() -> Scene {
