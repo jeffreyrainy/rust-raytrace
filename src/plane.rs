@@ -11,7 +11,7 @@ pub struct Plane {
 }
 
 impl Intersector for Plane {
-    fn intersect(&self, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3) {
+    fn intersect(&self, level: i64, ray: &Ray, scene: &Scene, full_tracing: bool) -> (f64, Vec3) {
         let denominator = ray.dir.dot(self.norm);
 
         if denominator == 0.0 {
@@ -24,8 +24,8 @@ impl Intersector for Plane {
             if full_tracing {
                 let pos = ray.origin + ray.dir * distance;
 
-                stat = scene.get_static_light(pos, self.norm, ray.dir, self.mat, self.id());
-                dyn = scene.get_dynamic_light(pos, self.norm, ray.dir, self.mat, self.id());
+                stat = scene.get_static_light(level + 1, pos, self.norm, ray.dir, self.mat, self.id());
+                dyn = scene.get_dynamic_light(level + 1, pos, self.norm, ray.dir, self.mat, self.id());
             }
 
             return (distance, stat + dyn);

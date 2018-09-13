@@ -38,7 +38,7 @@ fn render(image: &mut Vec<u8>, size_x: u32, size_y: u32, scene: &Scene) {
 
                 r.normalize();
 
-                color = color + scene.intersect(&r, true, 0).1;
+                color = color + scene.intersect(0, &r, true, 0).1;
             }
             color = color / 9.0;
 
@@ -72,7 +72,13 @@ fn main() {
                 v: [0.3, 0.0, -1.5],
             },
             r: 0.3,
-            mat: Material::default_material(),
+            mat: Material {
+                col: Vec3 { v: [1.0, 1.0, 1.0] },
+                specular: 0.1,
+                diffuse: 0.0,
+                refractive: 1.0,
+                ref_index: 1.2,
+            },
             id: 0,
         }));
         scene.add(Box::new(Sphere {
@@ -80,12 +86,7 @@ fn main() {
                 v: [-0.2, 0.4, -2.0],
             },
             r: 0.3,
-            mat: Material {
-                col: Vec3 { v: [0.0, 0.0, 0.0] },
-                specular: 0.0,
-                diffuse: 0.0,
-                refractive: 1.0,
-            },
+            mat: Material::default_material(),
             id: 0,
         }));
         scene.add(Box::new(Plane {
@@ -94,10 +95,11 @@ fn main() {
             },
             norm: Vec3 { v: [0.0, 1.0, 0.0] },
             mat: Material {
-                col: Vec3 { v: [0.7, 0.8, 0.4] },
-                specular: 0.4,
-                diffuse: 0.6,
+                col: Vec3 { v: [0.7, 0.5, 1.0] },
+                specular: 0.3,
+                diffuse: 0.7,
                 refractive: 0.0,
+                ref_index: 1.0
             },
             id: 0,
         }));

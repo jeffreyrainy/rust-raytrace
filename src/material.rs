@@ -6,6 +6,7 @@ pub struct Material {
     pub diffuse: f64,
     pub specular: f64,
     pub refractive: f64,
+    pub ref_index: f64,
 }
 
 impl Material {
@@ -15,6 +16,7 @@ impl Material {
             diffuse: 0.8,
             specular: 0.2,
             refractive: 0.0,
+            ref_index: 1.0
         }
     }
 }
