@@ -14,6 +14,9 @@ pub struct Scene {
     next_id: i64,
 }
 
+// todo: currently we have full shadow if object present in ray to light
+// todo: we also have self-shadowing, for transparent spheres, for example
+
 impl Scene {
     pub fn add(&mut self, mut object: Box<dyn Intersector>) {
         object.set_id(self.next_id);
@@ -40,8 +43,9 @@ impl Scene {
         let mut best_dist = 0.0;
 
         for object in &self.objects {
-            if object.id() != except {
-                let dist = object.intersect(level, &ray, self, full_tracing);
+            let dist = object.intersect(level, &ray, self, full_tracing);
+            // todo: 0.01 is hackish. intends to allows the further side of an object to still hit
+            if object.id() != except || dist.0 > 0.01 {
 
                 if dist.0 > 0.0 {
                     if !best_valid || dist.0 < best_dist {

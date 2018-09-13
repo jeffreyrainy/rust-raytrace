@@ -24,13 +24,14 @@ impl Intersector for Sphere {
         let pos;
         let dist;
 
-        if d1 > 0.0 {
+        // todo: 0.01 is hackish. intends to allows the further side of an object to still hit
+        if d1 > 0.01 {
             dist = d1;
         } else {
             dist = d2;
         }
 
-        if dist > 0.0 {
+        if dist > 0.01 {
             let mut stat = Vec3::default_vec();
             let mut dyn = Vec3::default_vec();
 

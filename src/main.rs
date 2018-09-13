@@ -76,8 +76,8 @@ fn main() {
                 col: Vec3 { v: [1.0, 1.0, 1.0] },
                 specular: 0.1,
                 diffuse: 0.0,
-                refractive: 1.0,
-                ref_index: 1.2,
+                refractive: 0.95,
+                ref_index: 1.4,
             },
             id: 0,
         }));
