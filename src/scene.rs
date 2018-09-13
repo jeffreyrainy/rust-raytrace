@@ -154,12 +154,6 @@ impl Scene {
             } else {
                 refracted_dir = reflected;
             }
-
-            if refracted_dir.dot(ray_dir) < 0.8
-            {
-                println!("foo {} {}", ray_dir.dot(normal), refracted_dir.dot(ray_dir))
-            }
-
         }
 
         let refracted_ray = Ray {
