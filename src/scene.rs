@@ -69,7 +69,7 @@ impl Scene {
             diffuse = 0.0;
         }
 
-        let mut reflected = ray_dir - (normal * ray_dir.dot(normal)) * 2.0;
+        let mut reflected = ray_dir - 2.0 * (normal * ray_dir.dot(normal));
         reflected.normalize();
 
         let mut specular = light_dir.dot(reflected);
